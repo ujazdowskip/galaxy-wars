@@ -1,6 +1,7 @@
 const createError = require("http-errors");
 const express = require("serverless-express/express");
 const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
 const logger = require("morgan");
 
 const indexRouter = require("./routes/index");
@@ -9,6 +10,7 @@ module.exports = (creationDate) => {
   const app = express();
 
   app.use(logger("dev"));
+  app.use(bodyParser.json());
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
   app.use(cookieParser());
@@ -28,7 +30,7 @@ module.exports = (creationDate) => {
 
     // render the error page
     res.status(err.status || 500);
-    res.render("error");
+    res.send(err.message);
   });
 
   return app;
