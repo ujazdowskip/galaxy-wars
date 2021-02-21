@@ -9,6 +9,7 @@ provider:
 
 plugins:
   - serverless-express
+  - serverless-plugin-typescript
   - serverless-offline
 
 functions:

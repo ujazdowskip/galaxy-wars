@@ -4,7 +4,7 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
 
-const indexRouter = require("./routes/index");
+import { CharactersController } from "./controllers/characters";
 
 module.exports = (creationDate) => {
   const app = express();
@@ -15,7 +15,9 @@ module.exports = (creationDate) => {
   app.use(express.urlencoded({ extended: false }));
   app.use(cookieParser());
 
-  app.use("/", indexRouter(creationDate));
+  const charactersController = new CharactersController();
+
+  charactersController.register(app);
 
   // catch 404 and forward to error handler
   app.use(function (req, res, next) {

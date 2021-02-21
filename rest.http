@@ -1,0 +1,25 @@
+GET http://localhost:3000/dev
+
+###
+
+GET http://localhost:3000/dev/characters
+
+###
+
+POST http://localhost:3000/dev/characters
+Content-Type: application/json
+
+{
+  "name": "suabo"
+}
+
+###
+
+###
+
+POST http://localhost:3000/dev
+Content-Type: application/json
+
+{
+  "elo": "melo"
+}
