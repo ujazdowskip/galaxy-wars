@@ -1,19 +1,15 @@
-const createError = require("http-errors");
-const express = require("serverless-express/express");
-const cookieParser = require("cookie-parser");
-const bodyParser = require("body-parser");
-const logger = require("morgan");
+import * as createError from "http-errors";
+import * as bodyParser from "body-parser";
+import * as logger from "morgan";
 
 import { CharactersController } from "./controllers/characters";
 
-module.exports = (creationDate) => {
+export function bootstrap(express) {
   const app = express();
-
   app.use(logger("dev"));
   app.use(bodyParser.json());
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
-  app.use(cookieParser());
 
   const charactersController = new CharactersController();
 
@@ -36,4 +32,4 @@ module.exports = (creationDate) => {
   });
 
   return app;
-};
+}

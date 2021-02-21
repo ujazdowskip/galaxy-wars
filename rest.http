@@ -2,6 +2,10 @@ GET http://localhost:3000/dev
 
 ###
 
+GET http://localhost:3000/dev/missing
+
+###
+
 GET http://localhost:3000/dev/characters
 
 ###
