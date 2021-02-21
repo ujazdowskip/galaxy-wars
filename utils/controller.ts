@@ -6,7 +6,13 @@ export interface RequestContext {
   body: Request["body"];
 }
 
-type ControllerHandler = (r: RequestContext) => string | number | void | object;
+interface JSONResponse {
+  [key: string]: any;
+}
+
+type ControllerHandler = (
+  r: RequestContext
+) => Promise<string | void | object> | string | void | JSONResponse;
 
 interface HandlerConfig {
   method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
@@ -93,19 +99,34 @@ export class Controller {
     Object.keys(this.handlers).forEach((key) => {
       const { method, path, handler } = this.handlers[key];
       const status = this.statuses && this.statuses[key];
-      const handlerWrapper = (req, res) => {
+      const handlerWrapper = (req, res, next) => {
         const ctx: RequestContext = {
           params: req.params,
           query: req.query,
           body: req.body,
         };
-        const result = handler(ctx);
 
         if (status) {
           res.status(status);
         }
 
-        res.send(result);
+        const result = handler(ctx);
+
+        if (
+          result &&
+          typeof result === "object" &&
+          typeof result.then === "function"
+        ) {
+          result
+            .then((d) => {
+              res.send(d);
+            })
+            .catch((err) => {
+              next(err);
+            });
+        } else {
+          res.send(result);
+        }
       };
 
       switch (method) {
@@ -131,6 +152,12 @@ export class Controller {
   }
 
   register(app) {
-    app.use("/" + this.path, this.router);
+    let path = "/";
+
+    if (this.path) {
+      path += this.path;
+    }
+
+    app.use(path, this.router);
   }
 }
