@@ -18,6 +18,10 @@ interface HandlerMap {
   [name: string]: HandlerConfig;
 }
 
+interface StatusMap {
+  [name: string]: number;
+}
+
 interface HandlerPropertyDescriptior extends PropertyDescriptor {
   value?: ControllerHandler;
 }
@@ -58,6 +62,22 @@ export const Put = MethodFactory("PUT");
 export const Patch = MethodFactory("PATCH");
 export const Delete = MethodFactory("DELETE");
 
+export function Status(code: number) {
+  return function (
+    target: Controller,
+    propertyKey: string,
+    descriptor: HandlerPropertyDescriptior
+  ) {
+    if (!target.statuses) {
+      target.statuses = {};
+    }
+
+    if (descriptor.value) {
+      target.statuses[propertyKey] = code;
+    }
+  };
+}
+
 export class Controller {
   router: Router;
 
@@ -65,11 +85,14 @@ export class Controller {
 
   handlers: HandlerMap;
 
+  statuses: StatusMap;
+
   constructor() {
     this.router = Router();
 
     Object.keys(this.handlers).forEach((key) => {
       const { method, path, handler } = this.handlers[key];
+      const status = this.statuses && this.statuses[key];
       const handlerWrapper = (req, res) => {
         const ctx: RequestContext = {
           params: req.params,
@@ -77,6 +100,10 @@ export class Controller {
           body: req.body,
         };
         const result = handler(ctx);
+
+        if (status) {
+          res.status(status);
+        }
 
         res.send(result);
       };

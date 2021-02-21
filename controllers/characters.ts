@@ -4,6 +4,7 @@ import {
   Get,
   Post,
   RequestContext,
+  Status,
 } from "../utils/controller";
 
 interface SomeResult {
@@ -19,6 +20,7 @@ export class CharactersController extends Controller {
   }
 
   @Post()
+  @Status(204)
   createCharacter(reqCtx: RequestContext): void {
     console.log("CREATED", reqCtx.body);
   }
