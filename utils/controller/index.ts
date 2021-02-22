@@ -1,4 +1,6 @@
 import { Router, Request } from "express";
+import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
+import * as set from "lodash.set";
 
 export interface RequestContext {
   params: Request["params"];
@@ -84,6 +86,16 @@ export function Status(code: number) {
   };
 }
 
+export function Api(spec: OpenAPIV3.OperationObject) {
+  return function (
+    target: Controller,
+    propertyKey: string,
+    descriptor: HandlerPropertyDescriptior
+  ) {
+    set(target, ["apiDocs", propertyKey], spec);
+  };
+}
+
 export class Controller {
   router: Router;
 
@@ -93,9 +105,15 @@ export class Controller {
 
   statuses: StatusMap;
 
+  apiDocs: {
+    [key: string]: any;
+  };
+
   constructor() {
     this.router = Router();
+  }
 
+  installRoutes(): void {
     Object.keys(this.handlers).forEach((key) => {
       const { method, path, handler } = this.handlers[key];
       const status = this.statuses && this.statuses[key];
@@ -151,13 +169,53 @@ export class Controller {
     });
   }
 
-  register(app) {
-    let path = "/";
+  getApiSpec(): { paths: OpenAPIV3.PathsObject } {
+    let routerPath = "/";
+    const pathsConfig = { paths: {} };
 
     if (this.path) {
-      path += this.path;
+      routerPath += this.path;
     }
 
-    app.use(path, this.router);
+    Object.keys(this.handlers).forEach((operationId) => {
+      const { path, method } = this.handlers[operationId];
+      let endpoint = routerPath + "/" + path;
+      let openApiEndpoint = endpoint
+        .split("/")
+        .map((part) => {
+          if (part[0] === ":") {
+            return `{${part.slice(1)}}`;
+          }
+
+          return part;
+        })
+        .filter((a) => a)
+        .join("/");
+
+      if (openApiEndpoint[openApiEndpoint.length - 1] === "/") {
+        openApiEndpoint = openApiEndpoint.slice(0, openApiEndpoint.length - 1);
+      }
+
+      set(pathsConfig.paths, ["/" + openApiEndpoint, method.toLowerCase()], {
+        operationId,
+        responses: {}, // OpenApiValidator does not allow this undefined
+        ...this.apiDocs[operationId],
+      });
+    });
+
+    return pathsConfig;
+  }
+
+  register(app): void {
+    let routerPath = "/";
+
+    if (this.path) {
+      routerPath += this.path;
+    }
+
+    // installing routes have to be deffered - OpenApiValidatur must come first
+    this.installRoutes();
+
+    app.use(routerPath, this.router);
   }
 }

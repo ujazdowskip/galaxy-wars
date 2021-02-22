@@ -1,12 +1,8 @@
-GET http://localhost:3000/dev
-
-###
-
-GET http://localhost:3000/dev/missing
-
-###
-
 GET http://localhost:3000/dev/characters
+
+###
+
+GET http://localhost:3000/dev/characters/123
 
 ###
 
@@ -14,16 +10,6 @@ POST http://localhost:3000/dev/characters
 Content-Type: application/json
 
 {
-  "name": "suabo"
+  "nam": "suabo"
 }
 
-###
-
-###
-
-POST http://localhost:3000/dev
-Content-Type: application/json
-
-{
-  "elo": "melo"
-}

@@ -10,7 +10,9 @@
     "body-parser": "^1.18.3",
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "express-openapi-validator": "^4.11.0",
     "http-errors": "~1.6.3",
+    "lodash.set": "^4.3.2",
     "morgan": "~1.9.1",
     "serverless-express": "^2.0.11"
   },
