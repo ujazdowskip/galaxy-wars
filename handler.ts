@@ -7,7 +7,4 @@ import { CharactersController } from "./controllers/characters";
 const charactersController = new CharactersController();
 const app = bootstrap(express, [charactersController]);
 
-// FIXME: something is not right - app is bootstrapping every time handler is called
-// check if also apply to deployed lambda
-
 export const api = handler(app);
