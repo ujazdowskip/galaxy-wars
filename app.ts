@@ -4,12 +4,13 @@ import * as logger from "morgan";
 import { Controller } from "./utils/controller";
 import * as OpenApiValidator from "express-openapi-validator";
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
+import * as appPackage from "./package.json";
 
 const apiSpec: OpenAPIV3.Document = {
   openapi: "3.0.3",
   info: {
     title: "Galaxy Wars API",
-    version: "1.0", // TODO: het this from package.json
+    version: appPackage.version,
   },
   paths: {},
 };
@@ -54,6 +55,8 @@ export function bootstrap(express, controllers: Controller[]) {
     res.status(status);
     res.send(status === 500 ? "Server error" : err.message);
   });
+
+  console.log(`Galaxy Wars ${appPackage.version}`);
 
   return app;
 }
