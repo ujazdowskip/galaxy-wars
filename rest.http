@@ -2,7 +2,7 @@ GET http://localhost:3000/dev/characters
 
 ###
 
-GET http://localhost:3000/dev/characters/123
+GET http://localhost:3000/dev/characters/123?elo=asd
 
 ###
 
@@ -10,6 +10,7 @@ POST http://localhost:3000/dev/characters
 Content-Type: application/json
 
 {
-  "nam": "suabo"
+  "name": "suabo",
+  "age": 123
 }
 

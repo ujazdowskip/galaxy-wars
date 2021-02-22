@@ -6,6 +6,7 @@ import {
   Prefix,
   RequestContext,
   Post,
+  Parameters,
 } from "../utils/controller";
 import * as express from "express";
 
@@ -110,7 +111,7 @@ describe("Controller routing", () => {
     const response = await request(app).get("/non-existing");
     expect(response.statusCode).toBe(404);
     expect(response.headers["content-type"]).toBe("text/html; charset=utf-8");
-    expect(response.text).toBe("Not Found");
+    expect(response.text).toBe("not found");
   });
 
   test("It should work without prefix", async () => {
@@ -152,19 +153,6 @@ describe("Controller request context", () => {
     });
   });
 
-  test("It should handle query", async () => {
-    const response = await request(app).get("/1?a=1&b=foo");
-    expect(response.body).toStrictEqual({
-      params: {
-        id: "1",
-      },
-      query: {
-        a: "1",
-        b: "foo",
-      },
-    });
-  });
-
   test("It should handle body", async () => {
     const response = await request(app).post("/").send({ foo: "bar" });
     expect(response.body).toStrictEqual({
@@ -172,5 +160,54 @@ describe("Controller request context", () => {
         foo: "bar",
       },
     });
+  });
+});
+
+describe("Controller query params", () => {
+  let app;
+  beforeAll(() => {
+    class TestController extends Controller {
+      @Get("with-query")
+      @Parameters([
+        {
+          name: "foo",
+          in: "query",
+          required: false,
+          schema: {
+            type: "string",
+          },
+        },
+      ])
+      hasQuery(r: RequestContext): any {
+        return {
+          query: r.query,
+        };
+      }
+
+      @Get("no-query")
+      noQuery(r: RequestContext): any {
+        return {
+          query: r.query,
+        };
+      }
+    }
+
+    app = bootstrap(express, [new TestController()]);
+  });
+
+  test("It should handle query", async () => {
+    const response = await request(app).get("/with-query?foo=bar");
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toStrictEqual({
+      query: {
+        foo: "bar",
+      },
+    });
+  });
+
+  test("It should prevent unknown query", async () => {
+    const response = await request(app).get("/no-query?foo=bar");
+    expect(response.statusCode).toBe(400);
+    expect(response.text).toStrictEqual("Unknown query parameter 'foo'");
   });
 });

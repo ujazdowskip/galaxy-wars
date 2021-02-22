@@ -86,13 +86,22 @@ export function Status(code: number) {
   };
 }
 
-export function Api(spec: OpenAPIV3.OperationObject) {
-  return function (
-    target: Controller,
-    propertyKey: string,
-    descriptor: HandlerPropertyDescriptior
-  ) {
-    set(target, ["apiDocs", propertyKey], spec);
+export function Parameters(schema: OpenAPIV3.ParameterObject[]) {
+  return function (target: Controller, propertyKey: string) {
+    set(target, ["apiDocs", propertyKey, "parameters"], schema);
+  };
+}
+
+export function ValidateBody(schema: OpenAPIV3.SchemaObject) {
+  return function (target: Controller, propertyKey: string) {
+    set(target, ["apiDocs", propertyKey, "requestBody"], {
+      required: true,
+      content: {
+        "application/json": {
+          schema,
+        },
+      },
+    });
   };
 }
 
@@ -105,7 +114,7 @@ export class Controller {
 
   statuses: StatusMap;
 
-  apiDocs: {
+  apiDocs?: {
     [key: string]: any;
   };
 
@@ -199,7 +208,7 @@ export class Controller {
       set(pathsConfig.paths, ["/" + openApiEndpoint, method.toLowerCase()], {
         operationId,
         responses: {}, // OpenApiValidator does not allow this undefined
-        ...this.apiDocs[operationId],
+        ...(this.apiDocs ? this.apiDocs[operationId] : {}),
       });
     });
 

@@ -5,7 +5,8 @@ import {
   Post,
   RequestContext,
   Status,
-  Api,
+  ValidateBody,
+  Parameters,
 } from "../utils/controller";
 
 interface SomeResult {
@@ -16,30 +17,20 @@ interface SomeResult {
 @Prefix("characters")
 export class CharactersController extends Controller {
   @Get()
-  @Api({
-    summary: "basic listing",
-  })
   listCharacters(reqCtx: RequestContext): string[] {
     return ["a", "b"];
   }
 
   @Post()
-  @Api({
-    summary: "This is creation endpoint",
-    requestBody: {
-      required: true,
-      content: {
-        "application/json": {
-          schema: {
-            type: "object",
-            required: ["name"],
-            properties: {
-              name: {
-                type: "string",
-              },
-            },
-          },
-        },
+  @ValidateBody({
+    type: "object",
+    required: ["name", "age"],
+    properties: {
+      name: {
+        type: "string",
+      },
+      age: {
+        type: "number",
       },
     },
   })
@@ -49,9 +40,16 @@ export class CharactersController extends Controller {
   }
 
   @Get(":id")
-  @Api({
-    summary: "some get",
-  })
+  @Parameters([
+    {
+      name: "elo",
+      in: "query",
+      required: false,
+      schema: {
+        type: "string",
+      },
+    },
+  ])
   getCharacter(reqCtx: RequestContext): SomeResult {
     return {
       params: reqCtx.params,
