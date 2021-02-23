@@ -14,7 +14,7 @@ plugins:
 
 functions:
   api:
-    handler: handler.api
+    handler: src/handler.api
     events:
       - http:
           method: ANY

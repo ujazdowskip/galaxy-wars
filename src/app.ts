@@ -4,7 +4,7 @@ import * as logger from "morgan";
 import { Controller } from "./core";
 import * as OpenApiValidator from "express-openapi-validator";
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
-import * as appPackage from "./package.json";
+import * as appPackage from "../package.json";
 
 const apiSpec: OpenAPIV3.Document = {
   openapi: "3.0.3",

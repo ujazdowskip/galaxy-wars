@@ -1,5 +1,5 @@
 import * as request from "supertest";
-import { bootstrap } from "../app";
+import { bootstrap } from "../src/app";
 import {
   Controller,
   Get,
@@ -7,7 +7,7 @@ import {
   RequestContext,
   Post,
   Parameters,
-} from "../core";
+} from "../src/core";
 import * as express from "express";
 
 describe("Controller return types", () => {
