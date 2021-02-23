@@ -7,6 +7,7 @@ import {
   RequestContext,
   Post,
   Parameters,
+  ValidateBody,
 } from "../src/core";
 import * as express from "express";
 
@@ -209,5 +210,44 @@ describe("Controller query params", () => {
     const response = await request(app).get("/no-query?foo=bar");
     expect(response.statusCode).toBe(400);
     expect(response.text).toStrictEqual("Unknown query parameter 'foo'");
+  });
+});
+
+describe("Controller validates body", () => {
+  let app;
+  beforeAll(() => {
+    class TestController extends Controller {
+      @Post()
+      @ValidateBody({
+        type: "object",
+        required: ["foo"],
+        properties: {
+          foo: {
+            type: "string",
+          },
+        },
+      })
+      hasQuery(r: RequestContext): any {
+        return r.body;
+      }
+    }
+
+    app = bootstrap(express, [new TestController()]);
+  });
+
+  test("It should prevent invalid body", async () => {
+    const response = await request(app).post("/").send({});
+    expect(response.statusCode).toBe(400);
+    expect(response.text).toStrictEqual(
+      "request.body should have required property 'foo'"
+    );
+  });
+
+  test("It should allow valid body", async () => {
+    const response = await request(app).post("/").send({ foo: "bar" });
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toStrictEqual({
+      foo: "bar",
+    });
   });
 });
