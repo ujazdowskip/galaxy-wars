@@ -1,7 +1,7 @@
 import * as createError from "http-errors";
 import * as bodyParser from "body-parser";
 import * as logger from "morgan";
-import { Controller } from "./utils/controller";
+import { Controller } from "./core";
 import * as OpenApiValidator from "express-openapi-validator";
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 import * as appPackage from "./package.json";

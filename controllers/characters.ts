@@ -7,7 +7,7 @@ import {
   Status,
   ValidateBody,
   Parameters,
-} from "../utils/controller";
+} from "../core";
 
 interface SomeResult {
   params: any;

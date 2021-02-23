@@ -7,7 +7,7 @@ import {
   RequestContext,
   Post,
   Parameters,
-} from "../utils/controller";
+} from "../core";
 import * as express from "express";
 
 describe("Controller return types", () => {
