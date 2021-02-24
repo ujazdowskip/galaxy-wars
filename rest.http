@@ -1,12 +1,12 @@
-GET http://localhost:3000/dev/characters
+GET http://localhost:3000/local/characters
 
 ###
 
-GET http://localhost:3000/dev/characters/123?elo=asd
+GET http://localhost:3000/local/characters/123?elo=asd
 
 ###
 
-POST http://localhost:3000/dev/characters
+POST http://localhost:3000/local/characters
 Content-Type: application/json
 
 {

@@ -9,6 +9,8 @@ import {
   Parameters,
 } from "../core";
 
+import * as dynamodb from "serverless-dynamodb-client";
+
 interface SomeResult {
   params: any;
   query: any;
@@ -17,8 +19,22 @@ interface SomeResult {
 @Prefix("characters")
 export class CharactersController extends Controller {
   @Get()
-  listCharacters(reqCtx: RequestContext): string[] {
-    return ["a", "b"];
+  async listCharacters(reqCtx: RequestContext): Promise<any[]> {
+    const docClient = dynamodb.doc;
+    const params = {
+      TableName: "galaxy-characters",
+    };
+
+    return new Promise((resolve, reject) => {
+      docClient.scan(params, function (err, data) {
+        console.log(err);
+        if (err) {
+          return reject(err);
+        }
+
+        resolve(data);
+      });
+    });
   }
 
   @Post()

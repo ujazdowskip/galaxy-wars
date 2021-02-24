@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start:dev": "sls offline -c serverless.dev.yml",
+    "start:dev": "sls offline start -s local",
     "test": "jest"
   },
   "dependencies": {
@@ -14,6 +14,7 @@
     "http-errors": "~1.6.3",
     "lodash.set": "^4.3.2",
     "morgan": "~1.9.1",
+    "serverless-dynamodb-client": "^0.0.2",
     "serverless-express": "^2.0.11"
   },
   "devDependencies": {
@@ -22,6 +23,7 @@
     "@types/node": "^14.14.31",
     "jest": "^26.6.3",
     "serverless": "^2.25.2",
+    "serverless-dynamodb-local": "^0.2.39",
     "serverless-offline": "^6.8.0",
     "serverless-plugin-typescript": "^1.1.9",
     "superagent": "^3.8.3",
