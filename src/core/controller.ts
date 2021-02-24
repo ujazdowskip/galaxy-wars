@@ -62,22 +62,25 @@ export class Controller {
           res.status(status);
         }
 
-        const result = handler(ctx);
-
-        if (
-          result &&
-          typeof result === "object" &&
-          typeof result.then === "function"
-        ) {
-          result
-            .then((d) => {
-              res.send(d);
-            })
-            .catch((err) => {
-              next(err);
-            });
-        } else {
-          res.send(result);
+        try {
+          const result = handler.call(this, ctx);
+          if (
+            result &&
+            typeof result === "object" &&
+            typeof result.then === "function"
+          ) {
+            result
+              .then((d) => {
+                res.send(d);
+              })
+              .catch((err) => {
+                next(err);
+              });
+          } else {
+            res.send(result);
+          }
+        } catch (error) {
+          next(error);
         }
       };
 

@@ -46,14 +46,16 @@ export function bootstrap(express, controllers: Controller[]) {
 
   // error handler
   app.use(function (err, req, res, next) {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get("env") === "development" ? err : {};
-
+    const env = req.app.get("env");
     const status = err.status || 500;
 
     res.status(status);
-    res.send(status === 500 ? "Server error" : err.message);
+
+    if (env === "development") {
+      res.send(err);
+    } else {
+      res.send(status === 500 ? "Server error" : err.message);
+    }
   });
 
   console.log(`Galaxy Wars ${appPackage.version}`);

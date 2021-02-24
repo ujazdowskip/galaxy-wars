@@ -10,7 +10,8 @@ POST http://localhost:3000/local/characters
 Content-Type: application/json
 
 {
-  "name": "suabo",
-  "age": 123
+  "name": "gnoaas asldj",
+  "planet": "anomao",
+  "episodes": ["SOME HOPE"]
 }
 

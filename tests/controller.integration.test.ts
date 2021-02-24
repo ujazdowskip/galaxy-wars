@@ -46,14 +46,20 @@ describe("Controller return types", () => {
   });
 
   test("It should handle sync text", async () => {
+    // When
     const response = await request(app).get("/test/string");
+
+    // Then
     expect(response.statusCode).toBe(200);
     expect(response.headers["content-type"]).toBe("text/html; charset=utf-8");
     expect(response.text).toBe("ok");
   });
 
   test("It should handle sync json", async () => {
+    // When
     const response = await request(app).get("/test/json");
+
+    // Then
     expect(response.statusCode).toBe(200);
     expect(response.headers["content-type"]).toBe(
       "application/json; charset=utf-8"
@@ -62,7 +68,10 @@ describe("Controller return types", () => {
   });
 
   test("It should handle async json", async () => {
+    // When
     const response = await request(app).get("/test/async");
+
+    // Then
     expect(response.statusCode).toBe(200);
     expect(response.headers["content-type"]).toBe(
       "application/json; charset=utf-8"
@@ -71,14 +80,20 @@ describe("Controller return types", () => {
   });
 
   test("It should handle sync error", async () => {
+    // When
     const response = await request(app).get("/test/err-sync");
+
+    // Then
     expect(response.statusCode).toBe(500);
     expect(response.headers["content-type"]).toBe("text/html; charset=utf-8");
     expect(response.text).toStrictEqual("Server error");
   });
 
   test("It should handle async error", async () => {
+    // When
     const response = await request(app).get("/test/err-async");
+
+    // Then
     expect(response.statusCode).toBe(500);
     expect(response.headers["content-type"]).toBe("text/html; charset=utf-8");
     expect(response.text).toStrictEqual("Server error");
@@ -104,19 +119,26 @@ describe("Controller routing", () => {
   });
 
   test("It should handle index", async () => {
+    // When
     const response = await request(app).get("/");
     expect(response.text).toEqual("index");
   });
 
   test("It should handle non existing endpoint", async () => {
+    // When
     const response = await request(app).get("/non-existing");
+
+    // Then
     expect(response.statusCode).toBe(404);
     expect(response.headers["content-type"]).toBe("text/html; charset=utf-8");
     expect(response.text).toBe("not found");
   });
 
   test("It should work without prefix", async () => {
+    // When
     const response = await request(app).get("/foo");
+
+    // Then
     expect(response.text).toEqual("foo");
   });
 });
@@ -145,7 +167,10 @@ describe("Controller request context", () => {
   });
 
   test("It should handle parameters", async () => {
+    // When
     const response = await request(app).get("/1");
+
+    // Then
     expect(response.body).toStrictEqual({
       params: {
         id: "1",
@@ -155,7 +180,10 @@ describe("Controller request context", () => {
   });
 
   test("It should handle body", async () => {
+    // When
     const response = await request(app).post("/").send({ foo: "bar" });
+
+    // Then
     expect(response.body).toStrictEqual({
       body: {
         foo: "bar",
@@ -197,7 +225,10 @@ describe("Controller query params", () => {
   });
 
   test("It should handle query", async () => {
+    // When
     const response = await request(app).get("/with-query?foo=bar");
+
+    // Then
     expect(response.statusCode).toBe(200);
     expect(response.body).toStrictEqual({
       query: {
@@ -207,7 +238,10 @@ describe("Controller query params", () => {
   });
 
   test("It should prevent unknown query", async () => {
+    // When
     const response = await request(app).get("/no-query?foo=bar");
+
+    // Then
     expect(response.statusCode).toBe(400);
     expect(response.text).toStrictEqual("Unknown query parameter 'foo'");
   });
@@ -236,7 +270,10 @@ describe("Controller validates body", () => {
   });
 
   test("It should prevent invalid body", async () => {
+    // When
     const response = await request(app).post("/").send({});
+
+    // Then
     expect(response.statusCode).toBe(400);
     expect(response.text).toStrictEqual(
       "request.body should have required property 'foo'"
@@ -244,7 +281,10 @@ describe("Controller validates body", () => {
   });
 
   test("It should allow valid body", async () => {
+    // When
     const response = await request(app).post("/").send({ foo: "bar" });
+
+    // Then
     expect(response.statusCode).toBe(200);
     expect(response.body).toStrictEqual({
       foo: "bar",

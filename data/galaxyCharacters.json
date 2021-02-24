@@ -1,14 +1,17 @@
 [
   {
     "name": "Grand Bomo",
-    "planet": "Alenaron"
+    "planet": "Alenaron",
+    "episodes": ["OLD HOPE"]
   },
   {
     "name": "Adoy",
-    "planet": "Saturn"
+    "planet": "Saturn",
+    "episodes": ["OLD HOPE", "STAR NINJA"]
   },
   {
     "name": "Lukas Niebochod",
-    "planet": "Majorka"
+    "planet": "Majorka",
+    "episodes": ["OLD HOPE", "STAR NINJA", "PEW PEW"]
   }
 ]
