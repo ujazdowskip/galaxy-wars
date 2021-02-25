@@ -6,6 +6,12 @@ export interface CharacterEntity {
   episodes: string[];
 }
 
+interface ListResult<T> {
+  items: T[];
+  next?: string;
+  count: number;
+}
+
 const VALID_EPISODES = ["OLD HOPE", "STAR NINJA", "PEW PEW"];
 
 export const INVALID_EPISODES = Symbol("INVALID_EPISODES");
@@ -19,8 +25,27 @@ export class InvalidEpisodes extends Error {
 }
 
 interface ListQuery {
-  planet?: string;
-  characterName?: string;
+  nextToken?: string;
+}
+
+function prepareNextToken(q, data) {
+  if (data.LastEvaluatedKey) {
+    const next = Object.entries({
+      nextToken: data.LastEvaluatedKey.id,
+    })
+      .map((param) => param.join("="))
+      .join("&");
+
+    return next;
+  }
+}
+
+function getExclusiveStartKey(q: ListQuery) {
+  if (!!q.nextToken) {
+    return {
+      id: q.nextToken,
+    };
+  }
 }
 
 export class CharactersService {
@@ -32,37 +57,35 @@ export class CharactersService {
     this.docClient = docClient;
   }
 
-  private prepareQuery(query: ListQuery) {
-    let FilterExpression: string[] = [];
-    let ExpressionAttributeValues = {};
-
-    Object.keys(query).forEach((key) => {
-      FilterExpression.push(`${key} = :${key}`);
-      ExpressionAttributeValues[`:${key}`] = query[key];
-    });
-
-    return {
-      FilterExpression: FilterExpression.join(" AND "),
-      ExpressionAttributeValues,
-    };
-  }
-
-  list(query: ListQuery = {}): Promise<CharacterEntity[]> {
-    const preparedQuery =
-      Object.keys(query).length > 0 ? this.prepareQuery(query) : {};
-
-    const params: DynamoDB.DocumentClient.ScanInput = {
+  list(query: ListQuery = {}): Promise<ListResult<CharacterEntity>> {
+    const params: DynamoDB.DocumentClient.QueryInput = {
+      Limit: 5,
       TableName: this.tableName,
-      ...preparedQuery,
     };
+
+    const continuationParams = getExclusiveStartKey(query);
+
+    if (continuationParams) {
+      params.ExclusiveStartKey = continuationParams;
+    }
 
     return new Promise((resolve, reject) => {
-      this.docClient.scan(params, function (err, data) {
+      this.docClient.scan(params, (err, data) => {
         if (err) {
           return reject(err);
         }
 
-        resolve(data.Items);
+        const res: ListResult<CharacterEntity> = {
+          items: data.Items,
+          count: data.Items.length,
+        };
+        const nextToken = prepareNextToken(query, data);
+
+        if (nextToken) {
+          res.next = nextToken;
+        }
+
+        resolve(res);
       });
     });
   }

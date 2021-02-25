@@ -19,22 +19,25 @@ describe("CharactersService planet validation", () => {
 });
 
 describe("CharactersService list query", () => {
-  test("preparing query", async () => {
+  test("handling start key", async () => {
     // Given
-    const scanSpy = jest.fn((param, cb) => cb(null, {}));
+    const scanSpy = jest.fn((param, cb) =>
+      cb(null, {
+        Items: [1, 2, 3],
+      })
+    );
     const service = new CharactersService({ scan: scanSpy });
 
     // When
-    await service.list({ planet: "foo", characterName: "bar" });
+    await service.list({ nextToken: "123-asd" });
 
     // Then
     expect(scanSpy).toHaveBeenCalledWith(
       {
-        ExpressionAttributeValues: {
-          ":planet": "foo",
-          ":characterName": "bar",
+        ExclusiveStartKey: {
+          id: "123-asd",
         },
-        FilterExpression: "planet = :planet AND characterName = :characterName",
+        Limit: 5,
         TableName: "galaxy-characters",
       },
       expect.anything()

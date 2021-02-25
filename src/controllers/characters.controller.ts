@@ -27,20 +27,10 @@ export class CharactersController extends Controller {
   @Get()
   @Parameters([
     {
-      name: "planet",
+      name: "nextToken",
       in: "query",
       required: false,
-      schema: {
-        type: "string",
-      },
-    },
-    {
-      name: "characterName",
-      in: "query",
-      required: false,
-      schema: {
-        type: "string",
-      },
+      schema: { type: "string" },
     },
   ])
   async listCharacters(reqCtx: RequestContext) {
