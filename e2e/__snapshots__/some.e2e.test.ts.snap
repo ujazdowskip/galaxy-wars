@@ -1,0 +1,60 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Galaxy Wars E2E tests /characters endpoint 1`] = `
+Object {
+  "result": Object {
+    "count": 5,
+    "items": Array [
+      Object {
+        "characterName": "Some Old Monk",
+        "episodes": Array [
+          "OLD HOPE",
+        ],
+        "id": "ad4c7d73-55d9-4eb5-bf6d-2f38d3273a4e",
+        "planet": "Majorka",
+      },
+      Object {
+        "characterName": "Pada Niebochod",
+        "episodes": Array [
+          "OLD HOPE",
+          "STAR NINJA",
+          "PEW PEW",
+        ],
+        "id": "ae4c2c91-a077-4b50-8350-76c6c39531f8",
+        "planet": "Alomondo",
+      },
+      Object {
+        "characterName": "Lukas Niebochod",
+        "episodes": Array [
+          "OLD HOPE",
+          "STAR NINJA",
+          "PEW PEW",
+        ],
+        "id": "44922c91-7398-4a03-a288-d86cc9638872",
+        "planet": "Majorka",
+      },
+      Object {
+        "characterName": "CR-LO",
+        "episodes": Array [
+          "OLD HOPE",
+          "STAR NINJA",
+          "PEW PEW",
+        ],
+        "id": "2c240f9c-787c-4af5-85f2-b72fa97f0c9d",
+        "planet": "Robo",
+      },
+      Object {
+        "characterName": "Han Multiple",
+        "episodes": Array [
+          "OLD HOPE",
+          "STAR NINJA",
+          "PEW PEW",
+        ],
+        "id": "cb90ce84-2295-4de5-aa12-f23f969bbacf",
+        "planet": "Berono",
+      },
+    ],
+    "next": "nextToken=cb90ce84-2295-4de5-aa12-f23f969bbacf",
+  },
+}
+`;
