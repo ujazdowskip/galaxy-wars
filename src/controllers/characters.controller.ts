@@ -6,6 +6,7 @@ import {
   RequestContext,
   Status,
   ValidateBody,
+  Parameters,
 } from "../core";
 
 import {
@@ -24,8 +25,26 @@ export class CharactersController extends Controller {
   }
 
   @Get()
+  @Parameters([
+    {
+      name: "planet",
+      in: "query",
+      required: false,
+      schema: {
+        type: "string",
+      },
+    },
+    {
+      name: "characterName",
+      in: "query",
+      required: false,
+      schema: {
+        type: "string",
+      },
+    },
+  ])
   async listCharacters(reqCtx: RequestContext) {
-    const characters = await this.charactersService.list();
+    const characters = await this.charactersService.list(reqCtx.query);
 
     return {
       result: characters,
@@ -35,9 +54,9 @@ export class CharactersController extends Controller {
   @Post()
   @ValidateBody({
     type: "object",
-    required: ["name", "episodes"],
+    required: ["characterName", "episodes"],
     properties: {
-      name: {
+      characterName: {
         type: "string",
       },
       planet: {

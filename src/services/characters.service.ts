@@ -1,5 +1,7 @@
+import { DynamoDB } from "aws-sdk";
+
 export interface CharacterEntity {
-  name: string;
+  characterName: string;
   planet?: string;
   episodes: string[];
 }
@@ -16,6 +18,11 @@ export class InvalidEpisodes extends Error {
   }
 }
 
+interface ListQuery {
+  planet?: string;
+  characterName?: string;
+}
+
 export class CharactersService {
   docClient: any;
 
@@ -25,9 +32,28 @@ export class CharactersService {
     this.docClient = docClient;
   }
 
-  list(): Promise<CharacterEntity[]> {
-    const params = {
+  private prepareQuery(query: ListQuery) {
+    let FilterExpression: string[] = [];
+    let ExpressionAttributeValues = {};
+
+    Object.keys(query).forEach((key) => {
+      FilterExpression.push(`${key} = :${key}`);
+      ExpressionAttributeValues[`:${key}`] = query[key];
+    });
+
+    return {
+      FilterExpression: FilterExpression.join(" AND "),
+      ExpressionAttributeValues,
+    };
+  }
+
+  list(query: ListQuery = {}): Promise<CharacterEntity[]> {
+    const preparedQuery =
+      Object.keys(query).length > 0 ? this.prepareQuery(query) : {};
+
+    const params: DynamoDB.DocumentClient.ScanInput = {
       TableName: this.tableName,
+      ...preparedQuery,
     };
 
     return new Promise((resolve, reject) => {

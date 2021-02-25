@@ -1,17 +1,56 @@
 [
   {
-    "name": "Grand Bomo",
+    "characterName": "Grand Bomo",
     "planet": "Alenaron",
-    "episodes": ["OLD HOPE"]
+    "episodes": ["OLD HOPE"],
+    "id": "d1ccecbc-ae3e-4b53-a8a8-d32f4d2f94d7"
   },
   {
-    "name": "Adoy",
-    "planet": "Saturn",
-    "episodes": ["OLD HOPE", "STAR NINJA"]
+    "characterName": "Adoy",
+    "planet": "Unknown",
+    "episodes": ["OLD HOPE", "STAR NINJA"],
+    "id": "dd2c81e7-f357-40a3-b8f8-fa62def1bdf6"
   },
   {
-    "name": "Lukas Niebochod",
+    "characterName": "Lukas Niebochod",
     "planet": "Majorka",
-    "episodes": ["OLD HOPE", "STAR NINJA", "PEW PEW"]
+    "episodes": ["OLD HOPE", "STAR NINJA", "PEW PEW"],
+    "id": "44922c91-7398-4a03-a288-d86cc9638872"
+  },
+  {
+    "characterName": "Pada Niebochod",
+    "planet": "Alomondo",
+    "episodes": ["OLD HOPE", "STAR NINJA", "PEW PEW"],
+    "id": "ae4c2c91-a077-4b50-8350-76c6c39531f8"
+  },
+  {
+    "characterName": "L8-48",
+    "planet": "Robo",
+    "episodes": ["OLD HOPE", "STAR NINJA", "PEW PEW"],
+    "id": "59eac85c-948d-43d6-87a7-72559932034d"
+  },
+  {
+    "characterName": "CR-LO",
+    "planet": "Robo",
+    "episodes": ["OLD HOPE", "STAR NINJA", "PEW PEW"],
+    "id": "2c240f9c-787c-4af5-85f2-b72fa97f0c9d"
+  },
+  {
+    "characterName": "Han Multiple",
+    "planet": "Berono",
+    "episodes": ["OLD HOPE", "STAR NINJA", "PEW PEW"],
+    "id": "cb90ce84-2295-4de5-aa12-f23f969bbacf"
+  },
+  {
+    "characterName": "Big dogman",
+    "planet": "Dogmania",
+    "episodes": ["OLD HOPE", "STAR NINJA", "PEW PEW"],
+    "id": "7ca083a5-9bd4-4cc1-b30a-ac1da6e81453"
+  },
+  {
+    "characterName": "Some Old Monk",
+    "planet": "Majorka",
+    "episodes": ["OLD HOPE"],
+    "id": "ad4c7d73-55d9-4eb5-bf6d-2f38d3273a4e"
   }
 ]
