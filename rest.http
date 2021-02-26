@@ -1,8 +1,12 @@
-GET http://localhost:3000/local/characters
+GET http://localhost:3000/local/characters?nextToken=cb90ce84-2295-4de5-aa12-f23f969bbacf
 
 ###
 
-GET http://localhost:3000/local/characters/123?elo=asd
+GET http://localhost:3000/local/characters/dd2c81e7-f357-40a3-b8f8-fa62def1bdf6
+
+###
+
+GET http://localhost:3000/local/characters/000
 
 ###
 
@@ -10,8 +14,8 @@ POST http://localhost:3000/local/characters
 Content-Type: application/json
 
 {
-  "name": "gnoaas asldj",
+  "characterName": "gnoaas asldj",
   "planet": "anomao",
-  "episodes": ["SOME HOPE"]
+  "episodes": ["OLD HOPE"]
 }
 

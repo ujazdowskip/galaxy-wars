@@ -13,6 +13,7 @@ import {
   CharactersService,
   CharacterEntity,
   INVALID_EPISODES,
+  NOT_FOUND,
 } from "../services/characters.service";
 
 @Prefix("characters")
@@ -69,6 +70,21 @@ export class CharactersController extends Controller {
     } catch (error) {
       if (error[INVALID_EPISODES]) {
         error.status = 400;
+      }
+
+      throw error;
+    }
+  }
+
+  @Get(":id")
+  async getCharacter(reqCtx: RequestContext) {
+    try {
+      const res = await this.charactersService.get(reqCtx.params.id);
+
+      return res;
+    } catch (error) {
+      if (error[NOT_FOUND]) {
+        error.status = 404;
       }
 
       throw error;
