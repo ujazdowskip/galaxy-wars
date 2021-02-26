@@ -52,7 +52,8 @@ export function bootstrap(express, controllers: Controller[]) {
     res.status(status);
 
     if (env === "development") {
-      res.send(err);
+      console.log(err);
+      res.send(err.toString());
     } else {
       res.send(status === 500 ? "Server error" : err.message);
     }

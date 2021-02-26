@@ -20,11 +20,9 @@ describe("CharactersService", () => {
     // Given
     const err: any = new InvalidEpisodes(["foo"]);
 
-    CharactersService.prototype.create = jest
-      .fn()
-      .mockImplementationOnce(() => {
-        return Promise.reject(err);
-      });
+    CharactersService.prototype.put = jest.fn().mockImplementationOnce(() => {
+      return Promise.reject(err);
+    });
 
     const controller = new CharactersController(new CharactersService({}));
 

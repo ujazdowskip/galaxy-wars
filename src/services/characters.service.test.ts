@@ -6,13 +6,28 @@ describe("CharactersService planet validation", () => {
     const service = new CharactersService(jest.fn());
 
     // When
-    const createProm = service.create({
+    const createProm = service.put({
       characterName: "foo",
       episodes: ["NON EXISTING EPISODE", "ANOTHER ONE"],
     });
 
     // Then
     await expect(createProm).rejects.toThrow(
+      new InvalidEpisodes(["NON EXISTING EPISODE", "ANOTHER ONE"])
+    );
+  });
+
+  test("missing episodes does not throw error", async () => {
+    // Given
+    const service = new CharactersService(jest.fn());
+
+    // When
+    const createProm = service.put({
+      characterName: "foo",
+    });
+
+    // Then
+    await expect(createProm).rejects.not.toThrow(
       new InvalidEpisodes(["NON EXISTING EPISODE", "ANOTHER ONE"])
     );
   });

@@ -1,3 +1,4 @@
+import * as createError from "http-errors";
 import {
   Controller,
   Prefix,
@@ -7,6 +8,7 @@ import {
   Status,
   ValidateBody,
   Parameters,
+  Patch,
 } from "../core";
 
 import {
@@ -66,7 +68,49 @@ export class CharactersController extends Controller {
     const toCreate = reqCtx.body as CharacterEntity;
 
     try {
-      await this.charactersService.create(toCreate);
+      await this.charactersService.put(toCreate);
+    } catch (error) {
+      if (error[INVALID_EPISODES]) {
+        error.status = 400;
+      }
+
+      throw error;
+    }
+  }
+
+  @Status(204)
+  @Patch(":id")
+  @ValidateBody({
+    type: "object",
+    properties: {
+      characterName: {
+        type: "string",
+      },
+      planet: {
+        type: "string",
+      },
+      episodes: {
+        type: "array",
+        items: {
+          type: "string",
+        },
+      },
+    },
+  })
+  async modifyCharacter(reqCtx: RequestContext): Promise<void> {
+    const toUpdate = reqCtx.body as CharacterEntity;
+
+    const res = await this.charactersService.get(reqCtx.params.id);
+
+    if (!res) {
+      throw createError(404);
+    }
+
+    try {
+      await this.charactersService.put({
+        ...res,
+        ...toUpdate,
+      });
     } catch (error) {
       if (error[INVALID_EPISODES]) {
         error.status = 400;
@@ -78,16 +122,12 @@ export class CharactersController extends Controller {
 
   @Get(":id")
   async getCharacter(reqCtx: RequestContext) {
-    try {
-      const res = await this.charactersService.get(reqCtx.params.id);
+    const res = await this.charactersService.get(reqCtx.params.id);
 
-      return res;
-    } catch (error) {
-      if (error[NOT_FOUND]) {
-        error.status = 404;
-      }
-
-      throw error;
+    if (!res) {
+      throw createError(404);
     }
+
+    return res;
   }
 }

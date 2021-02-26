@@ -1,4 +1,4 @@
-GET http://localhost:3000/local/characters?nextToken=cb90ce84-2295-4de5-aa12-f23f969bbacf
+GET http://localhost:3000/local/characters
 
 ###
 
@@ -14,8 +14,17 @@ POST http://localhost:3000/local/characters
 Content-Type: application/json
 
 {
-  "characterName": "gnoaas asldj",
-  "planet": "anomao",
+  "characterName": "Big robot guy",
+  "planet": "Sandy sand",
   "episodes": ["OLD HOPE"]
+}
+
+###
+
+PATCH http://localhost:3000/local/characters/ad4c7d73-55d9-4eb5-bf6d-2f38d3273a4e
+Content-Type: application/json
+
+{
+  "planet": "Sandy world"
 }
 

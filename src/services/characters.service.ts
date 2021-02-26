@@ -2,10 +2,15 @@ import { DynamoDB } from "aws-sdk";
 import { v4 as uuidv4 } from "uuid";
 
 export interface CharacterEntity {
+  id: string;
   characterName: string;
   planet?: string;
   episodes: string[];
 }
+
+type AllOptional<Type> = {
+  [Property in keyof Type]?: Type[Property];
+};
 
 interface ListResult<T> {
   items: T[];
@@ -23,14 +28,6 @@ export class InvalidEpisodes extends Error {
     super();
     this.message = `Unknown episodes: ${episodes.join(", ")}`;
     this[INVALID_EPISODES] = true;
-  }
-}
-
-export class NotFound extends Error {
-  constructor() {
-    super();
-    this.message = "Character not found";
-    this[NOT_FOUND] = true;
   }
 }
 
@@ -100,19 +97,22 @@ export class CharactersService {
     });
   }
 
-  create(item: CharacterEntity): Promise<void> {
+  put(item: AllOptional<CharacterEntity>): Promise<void> {
+    if (!item.id) {
+      item.id = uuidv4();
+    }
+
     const params = {
       TableName: this.tableName,
-      Item: {
-        ...item,
-        id: uuidv4(),
-      },
+      Item: item,
     };
 
     return new Promise((resolve, reject) => {
-      this.validateEpisodes(item.episodes);
+      if (Array.isArray(item.episodes)) {
+        this.validateEpisodes(item.episodes);
+      }
 
-      this.docClient.put(params, (err) => {
+      this.docClient.put(params, (err, data) => {
         if (err) {
           reject(err);
         }
@@ -122,7 +122,7 @@ export class CharactersService {
     });
   }
 
-  get(id: string): Promise<any> {
+  get(id: string): Promise<CharacterEntity | null> {
     const params = {
       TableName: this.tableName,
       Key: {
@@ -137,7 +137,7 @@ export class CharactersService {
         }
 
         if (!data.Item) {
-          return reject(new NotFound());
+          return resolve(null);
         }
 
         resolve(data.Item);
