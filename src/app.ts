@@ -52,14 +52,11 @@ export function bootstrap(express, controllers: Controller[]) {
     res.status(status);
 
     if (env === "development") {
-      console.log(err);
       res.send(err.toString());
     } else {
       res.send(status === 500 ? "Server error" : err.message);
     }
   });
-
-  console.log(`Galaxy Wars ${appPackage.version}`);
 
   return app;
 }

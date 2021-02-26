@@ -28,3 +28,7 @@ Content-Type: application/json
   "planet": "Sandy world"
 }
 
+###
+
+DELETE http://localhost:3000/local/characters/dd2c81e7-f357-40a3-b8f8-fa62def1bdf6
+

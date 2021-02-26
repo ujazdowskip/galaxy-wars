@@ -145,6 +145,25 @@ export class CharactersService {
     });
   }
 
+  delete(id: string): Promise<void> {
+    const params = {
+      TableName: this.tableName,
+      Key: {
+        id: id,
+      },
+    };
+
+    return new Promise((resolve, reject) => {
+      this.docClient.delete(params, (err, data) => {
+        if (err) {
+          return reject(err);
+        }
+
+        resolve();
+      });
+    });
+  }
+
   private validateEpisodes(episodes: string[]) {
     episodes.forEach((ep) => {
       const unknownEpisodes = episodes.filter(

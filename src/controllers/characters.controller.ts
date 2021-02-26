@@ -9,13 +9,13 @@ import {
   ValidateBody,
   Parameters,
   Patch,
+  Delete,
 } from "../core";
 
 import {
   CharactersService,
   CharacterEntity,
   INVALID_EPISODES,
-  NOT_FOUND,
 } from "../services/characters.service";
 
 @Prefix("characters")
@@ -129,5 +129,17 @@ export class CharactersController extends Controller {
     }
 
     return res;
+  }
+
+  @Status(204)
+  @Delete(":id")
+  async deleteCharacter(reqCtx: RequestContext) {
+    const res = await this.charactersService.get(reqCtx.params.id);
+
+    if (!res) {
+      throw createError(404);
+    }
+
+    await this.charactersService.delete(reqCtx.params.id);
   }
 }
